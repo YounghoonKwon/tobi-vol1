@@ -2,13 +2,16 @@ package springbook.user.dao;
 
 import springbook.user.domain.User;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserDao {
 
     private final ConnectionMaker connectionMaker;
 
-    public UserDao(ConnectionMaker connectionMaker){
+    public UserDao(ConnectionMaker connectionMaker) {
         this.connectionMaker = connectionMaker;
     }
 
@@ -48,5 +51,18 @@ public class UserDao {
         c.close();
 
         return user;
+    }
+
+    public void clear() throws SQLException, ClassNotFoundException {
+        Connection c = connectionMaker.makeNewConnection();
+
+        PreparedStatement ps = c.prepareStatement(
+                "TRUNCATE TABLE USERS"
+        );
+
+        ps.executeUpdate();
+
+        ps.close();
+        c.close();
     }
 }
